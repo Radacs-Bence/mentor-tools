@@ -28,4 +28,13 @@ public class TrainingClassesService {
         Type targetListType = new TypeToken<List<TrainingClassDTO>>(){}.getType();
         return modelMapper.map(filtered, targetListType);
     }
+
+    public TrainingClassDTO findById(Long id) {
+        TrainingClass trainingClass = searchById(id);
+        return modelMapper.map(trainingClass, TrainingClassDTO.class);
+    }
+
+    private TrainingClass searchById(Long id) {
+        return trainingClassesRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("TrainingClass not found: " + id));
+    }
 }
