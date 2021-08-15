@@ -1,4 +1,4 @@
-package mentortools;
+package mentortools.trainingclasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

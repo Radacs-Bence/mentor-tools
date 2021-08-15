@@ -1,4 +1,4 @@
-package mentortools;
+package mentortools.trainingclasses;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -36,5 +36,15 @@ public class TrainingClassesService {
 
     private TrainingClass searchById(Long id) {
         return trainingClassesRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("TrainingClass not found: " + id));
+    }
+
+    public void deleteAll() {
+        trainingClassesRepository.deleteAll();
+    }
+
+    public TrainingClassDTO saveTrainingClass(CreateTrainingClassCommand command) {
+        TrainingClass trainingClass = trainingClassesRepository.save(new TrainingClass(command.getName(), command.getStart(), command.getEnd()));
+
+        return modelMapper.map(trainingClass, TrainingClassDTO.class);
     }
 }

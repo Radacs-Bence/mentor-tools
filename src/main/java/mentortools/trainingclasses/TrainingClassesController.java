@@ -1,9 +1,11 @@
-package mentortools;
+package mentortools.trainingclasses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,5 +32,20 @@ public class TrainingClassesController {
             description = "Finds a class in the repository.")
     public TrainingClassDTO findById(@PathVariable Long id){
         return trainingClassesService.findById(id);
+    }
+
+    @DeleteMapping
+    @Operation(summary = "Deletes all classes",
+            description = "Removes every class from repository!")
+    public void deleteAll(){
+        trainingClassesService.deleteAll();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Creates a course",
+            description = "Creates a course, with name and language.")
+    public TrainingClassDTO saveTrainingClass(@RequestBody @Valid CreateTrainingClassCommand command){
+        return trainingClassesService.saveTrainingClass(command);
     }
 }
