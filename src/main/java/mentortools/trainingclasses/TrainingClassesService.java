@@ -3,6 +3,7 @@ package mentortools.trainingclasses;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -44,6 +45,16 @@ public class TrainingClassesService {
 
     public TrainingClassDTO saveTrainingClass(CreateTrainingClassCommand command) {
         TrainingClass trainingClass = trainingClassesRepository.save(new TrainingClass(command.getName(), command.getStart(), command.getEnd()));
+
+        return modelMapper.map(trainingClass, TrainingClassDTO.class);
+    }
+
+    @Transactional
+    public TrainingClassDTO modifyTrainingAttributes(Long id, UpdateTrainingClassCommand command) {
+        TrainingClass trainingClass = searchById(id);
+        trainingClass.setName(command.getName());
+        trainingClass.setStart(command.getStart());
+        trainingClass.setEnd(command.getEnd());
 
         return modelMapper.map(trainingClass, TrainingClassDTO.class);
     }

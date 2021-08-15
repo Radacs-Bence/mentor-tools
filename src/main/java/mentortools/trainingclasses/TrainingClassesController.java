@@ -2,6 +2,7 @@ package mentortools.trainingclasses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class TrainingClassesController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Deletes all classes",
             description = "Removes every class from repository!")
     public void deleteAll(){
@@ -43,9 +45,17 @@ public class TrainingClassesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Creates a course",
-            description = "Creates a course, with name and language.")
+    @Operation(summary = "Creates a class",
+            description = "Creates a class, with name, start time, and end time.")
     public TrainingClassDTO saveTrainingClass(@RequestBody @Valid CreateTrainingClassCommand command){
         return trainingClassesService.saveTrainingClass(command);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @Operation(summary = "Modify a class",
+            description = "Modifies a class's name, start time, and end time.")
+    public TrainingClassDTO modifyTrainingAttributes(@PathVariable Long id, @RequestBody @Valid UpdateTrainingClassCommand command){
+        return trainingClassesService.modifyTrainingAttributes(id, command);
     }
 }

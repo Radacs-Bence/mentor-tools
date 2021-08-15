@@ -31,7 +31,7 @@ class TrainingClassesControllerRestTemplateIT {
 
 
     @Test
-    void listAllClasses() {
+    void listAllClassesTest() {
         TrainingClassDTO trainingClassFirst = template.postForObject("/api/trainingclasses",
                 new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
                 TrainingClassDTO.class);
@@ -55,7 +55,7 @@ class TrainingClassesControllerRestTemplateIT {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
         TrainingClassDTO trainingClassCreated = template.postForObject("/api/trainingclasses",
                 new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
                 TrainingClassDTO.class);
@@ -69,6 +69,28 @@ class TrainingClassesControllerRestTemplateIT {
                 .getBody();
 
         assertThat(trainingClassFound.getName()).isEqualTo("Java");
+    }
+
+    @Test
+    void modifyTrainingAttributesTest(){
+        TrainingClassDTO trainingClassCreated = template.postForObject("/api/trainingclasses",
+                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
+                TrainingClassDTO.class);
+
+        template.put("/api/trainingclasses/{id}",
+                new CreateTrainingClassCommand("Java2", LocalDate.of(2003, 3, 3), LocalDate.of(2030, 2, 2)),
+                trainingClassCreated.getId());
+
+        TrainingClassDTO trainingClassFound = template.exchange("/api/trainingclasses/{id}",
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<TrainingClassDTO>() {
+                        },
+                        trainingClassCreated.getId())
+                .getBody();
+
+        assertThat(trainingClassFound.getName()).isEqualTo("Java2");
+        assertThat(trainingClassFound.getStart()).isEqualTo(LocalDate.of(2003, 3, 3));
     }
 
 }
