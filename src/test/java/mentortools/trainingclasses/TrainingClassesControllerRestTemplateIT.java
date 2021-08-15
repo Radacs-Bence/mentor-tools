@@ -93,4 +93,33 @@ class TrainingClassesControllerRestTemplateIT {
         assertThat(trainingClassFound.getStart()).isEqualTo(LocalDate.of(2003, 3, 3));
     }
 
+    @Test
+    void deleteByIdTest(){
+        TrainingClassDTO trainingClassFirst = template.postForObject("/api/trainingclasses",
+                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
+                TrainingClassDTO.class);
+
+        TrainingClassDTO trainingClassSecond = template.postForObject("/api/trainingclasses",
+                new CreateTrainingClassCommand("JavaScript", LocalDate.of(2000, 2, 2), LocalDate.of(2030, 2, 2)),
+                TrainingClassDTO.class);
+
+        TrainingClassDTO trainingClassThird = template.postForObject("/api/trainingclasses",
+                new CreateTrainingClassCommand("Error", LocalDate.of(1990, 2, 2), LocalDate.of(2030, 2, 2)),
+                TrainingClassDTO.class);
+
+        template.delete("/api/trainingclasses/{id}", trainingClassThird.getId());
+
+        List<TrainingClassDTO> trainingClasses = template.exchange("/api/trainingclasses/",
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<TrainingClassDTO>>() {
+                        })
+                .getBody();
+
+        assertThat(trainingClasses)
+                .hasSize(2)
+                .extracting(TrainingClassDTO::getName)
+                .containsExactly("Java", "JavaScript");
+    }
+
 }

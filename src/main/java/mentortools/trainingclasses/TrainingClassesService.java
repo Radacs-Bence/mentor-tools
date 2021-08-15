@@ -26,7 +26,8 @@ public class TrainingClassesService {
         List<TrainingClass> filtered = trainingClasses.stream()
                 .filter(trainingClass -> name.isEmpty() || trainingClass.getName().toLowerCase().contains(name.get().toLowerCase()))
                 .collect(Collectors.toList());
-        Type targetListType = new TypeToken<List<TrainingClassDTO>>(){}.getType();
+        Type targetListType = new TypeToken<List<TrainingClassDTO>>() {
+        }.getType();
         return modelMapper.map(filtered, targetListType);
     }
 
@@ -57,5 +58,10 @@ public class TrainingClassesService {
         trainingClass.setEnd(command.getEnd());
 
         return modelMapper.map(trainingClass, TrainingClassDTO.class);
+    }
+
+    public void deleteById(Long id) {
+        TrainingClass trainingClass = searchById(id);
+        trainingClassesRepository.deleteById(id);
     }
 }

@@ -58,4 +58,12 @@ public class TrainingClassesController {
     public TrainingClassDTO modifyTrainingAttributes(@PathVariable Long id, @RequestBody @Valid UpdateTrainingClassCommand command){
         return trainingClassesService.modifyTrainingAttributes(id, command);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletes a class",
+            description = "Removes a class from the repository!")
+    public void deleteById(@PathVariable Long id){
+        trainingClassesService.deleteById(id);
+    }
 }
