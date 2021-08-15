@@ -33,11 +33,11 @@ class TrainingClassesControllerRestTemplateIT {
     @Test
     void listAllClasses() {
         TrainingClassDTO trainingClassFirst = template.postForObject("/api/trainingclasses",
-                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.MAX),
+                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
                 TrainingClassDTO.class);
 
         TrainingClassDTO trainingClassSecond = template.postForObject("/api/trainingclasses",
-                new CreateTrainingClassCommand("JavaScript", LocalDate.of(2000, 2, 2), LocalDate.MAX),
+                new CreateTrainingClassCommand("JavaScript", LocalDate.of(2000, 2, 2), LocalDate.of(2030, 2, 2)),
                 TrainingClassDTO.class);
 
         List<TrainingClassDTO> trainingClasses = template.exchange("/api/trainingclasses/",
@@ -57,7 +57,7 @@ class TrainingClassesControllerRestTemplateIT {
     @Test
     void findById() {
         TrainingClassDTO trainingClassCreated = template.postForObject("/api/trainingclasses",
-                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.MAX),
+                new CreateTrainingClassCommand("Java", LocalDate.of(2000, 1, 1), LocalDate.of(2030, 2, 2)),
                 TrainingClassDTO.class);
 
         TrainingClassDTO trainingClassFound = template.exchange("/api/trainingclasses/{id}",
