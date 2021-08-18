@@ -67,4 +67,8 @@ public class StudentsService {
         studentsRepository.deleteById(id);
     }
 
+    public StudentWithRegistrationsDTO findWithRegistrations(Long id) {
+        Student student = searchById(id);
+        return modelMapper.map(student, StudentWithRegistrationsDTO.class);
+    }
 }

@@ -2,6 +2,7 @@ package mentortools.trainingclasses;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mentortools.registrations.CreateRegistrationCommand;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class TrainingClassesController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Find classes by id",
+    @Operation(summary = "Find a class by id",
             description = "Finds a class in the repository.")
     public TrainingClassDTO findById(@PathVariable Long id){
         return trainingClassesService.findById(id);
@@ -64,5 +65,20 @@ public class TrainingClassesController {
             description = "Removes a class from the repository!")
     public void deleteById(@PathVariable Long id){
         trainingClassesService.deleteById(id);
+    }
+
+    @PostMapping("/{id}/registrations")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registers a student for the class",
+            description = "Creates a Registration belonging to the class and a student given with id.")
+    public TrainingClassWithRegistrationsDTO registerStudent(@PathVariable Long id, @RequestBody @Valid CreateRegistrationCommand command){
+        return trainingClassesService.registerStudent(id, command);
+    }
+
+    @GetMapping("/{id}/registrations")
+    @Operation(summary = "Find a class by id, with registrations",
+            description = "Finds a class in the repository, with registrations.")
+    public TrainingClassWithRegistrationsDTO findWithRegistrations(@PathVariable Long id){
+        return trainingClassesService.findWithRegistrations(id);
     }
 }

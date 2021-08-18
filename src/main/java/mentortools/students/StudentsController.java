@@ -65,4 +65,9 @@ public class StudentsController {
     public void deleteById(@PathVariable Long id){
         studentsService.deleteById(id);
     }
+
+    @GetMapping("/students/{id}/registrations")
+    public StudentWithRegistrationsDTO findWithRegistrations(@PathVariable Long id){
+        return studentsService.findWithRegistrations(id);
+    }
 }

@@ -1,5 +1,10 @@
 package mentortools.trainingclasses;
 
+import mentortools.registrations.CreateRegistrationCommand;
+import mentortools.registrations.Registration;
+import mentortools.registrations.RegistrationStatus;
+import mentortools.students.Student;
+import mentortools.students.StudentsRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -15,10 +20,12 @@ public class TrainingClassesService {
 
     private ModelMapper modelMapper;
     private TrainingClassesRepository trainingClassesRepository;
+    private StudentsRepository studentsRepository;
 
-    public TrainingClassesService(ModelMapper modelMapper, TrainingClassesRepository trainingClassesRepository) {
+    public TrainingClassesService(ModelMapper modelMapper, TrainingClassesRepository trainingClassesRepository, StudentsRepository studentsRepository) {
         this.modelMapper = modelMapper;
         this.trainingClassesRepository = trainingClassesRepository;
+        this.studentsRepository = studentsRepository;
     }
 
     public List<TrainingClassDTO> listAllClasses(Optional<String> name) {
@@ -63,5 +70,23 @@ public class TrainingClassesService {
     public void deleteById(Long id) {
         TrainingClass trainingClass = searchById(id);
         trainingClassesRepository.deleteById(id);
+    }
+
+    @Transactional
+    public TrainingClassWithRegistrationsDTO registerStudent(Long id, CreateRegistrationCommand command) {
+        TrainingClass trainingClass = searchById(id);
+        Student student = studentsRepository.findById(command.getStudentId()).orElseThrow(() -> new IllegalArgumentException("Student not found: " + id));
+
+        Registration registration = new Registration(student, trainingClass, RegistrationStatus.ACTIVE);
+
+        trainingClass.addRegistration(registration);
+        student.addRegistration(registration);
+
+        return modelMapper.map(trainingClass, TrainingClassWithRegistrationsDTO.class);
+    }
+
+    public TrainingClassWithRegistrationsDTO findWithRegistrations(Long id) {
+        TrainingClass trainingClass = searchById(id);
+        return modelMapper.map(trainingClass, TrainingClassWithRegistrationsDTO.class);
     }
 }

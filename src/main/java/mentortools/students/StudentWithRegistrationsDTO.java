@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentDTO {
+public class StudentWithRegistrationsDTO {
 
     private Long id;
 
@@ -21,5 +21,7 @@ public class StudentDTO {
     private String gitHub;
 
     private String comment;
+
+    private Set<RegistrationWithTrainingClassDTO> registrations;
 
 }
